@@ -13,18 +13,18 @@ services:
     volumes:
       - var_lib_mysql:/var/lib/mysql
 
-  nfsserver:
-    image: itsthenetwork/nfs-server-alpine:12
-    container_name: nfsserver
-    hostname: nfsserver
-    restart: unless-stopped
-    privileged: true
-    environment:
-      - SHARED_DIRECTORY=/nfs
-    volumes:
-      - /Volumes/lfs1/docker-nfs/:/nfs
-    expose:
-      - 2049
+#  nfsserver:
+#    image: itsthenetwork/nfs-server-alpine:12
+#    container_name: nfsserver
+#    hostname: nfsserver
+#    restart: unless-stopped
+#    privileged: true
+#    environment:
+#      - SHARED_DIRECTORY=/nfs
+#    volumes:
+#      - /Volumes/lfs1/docker-nfs/:/nfs
+#    expose:
+#      - 2049
 
   slurmdbd:
     image: slurm-docker-cluster:19.05.1
@@ -38,8 +38,7 @@ services:
     expose:
       - "6819"
     depends_on:
-      - mysql
-      - nfsserver
+      - "mysql"
 
   slurmctld:
     image: slurm-docker-cluster:19.05.1
@@ -56,7 +55,6 @@ services:
       - "2222:22"
     depends_on:
       - "slurmdbd"
-      - "nfsserver"
 
   c1:
     image: slurm-docker-cluster:19.05.1
