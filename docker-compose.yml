@@ -13,6 +13,19 @@ services:
     volumes:
       - var_lib_mysql:/var/lib/mysql
 
+  nfsserver:
+    image: itsthenetwork/nfs-server-alpine:12
+    container_name: nfsserver
+    hostname: nfsserver
+    restart: unless-stopped
+    privileged: true
+    environment:
+      - SHARED_DIRECTORY=/nfs
+    volumes:
+      - /Volumes/lfs1/docker-nfs/:/nfs
+    expose:
+      - 2049
+
   slurmdbd:
     image: slurm-docker-cluster:19.05.1
     command: ["slurmdbd"]
@@ -26,6 +39,7 @@ services:
       - "6819"
     depends_on:
       - mysql
+      - nfsserver
 
   slurmctld:
     image: slurm-docker-cluster:19.05.1
@@ -37,10 +51,12 @@ services:
       - etc_slurm:/etc/slurm
       - slurm_jobdir:/data
       - var_log_slurm:/var/log/slurm
-    expose:
-      - "6817"
+      - nfs_data:/nfs
+    ports:
+      - "2222:22"
     depends_on:
       - "slurmdbd"
+      - "nfsserver"
 
   c1:
     image: slurm-docker-cluster:19.05.1
@@ -78,3 +94,10 @@ volumes:
   slurm_jobdir:
   var_lib_mysql:
   var_log_slurm:
+  nfs_data:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: nfsvers=3,addr=ccg-data-1.isi.edu,rw
+      device: ":/data0/scratch-6-months-purge/slurm"
+      
