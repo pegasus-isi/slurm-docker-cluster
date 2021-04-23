@@ -86,6 +86,33 @@ RUN set -x \
 COPY slurm.conf /etc/slurm/slurm.conf
 COPY slurmdbd.conf /etc/slurm/slurmdbd.conf
 
+# Installing and configuring SSH server
+RUN yum -y install openssh-server openssh-clients
+RUN perl -pi -e 's/^#RSAAuthentication yes/RSAAuthentication yes/' /etc/ssh/sshd_config
+RUN perl -pi -e 's/^#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config
+RUN perl -pi -e 's/^PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+RUN perl -pi -e 's/^#UsePAM no/UsePAM no/' /etc/ssh/sshd_config
+RUN perl -pi -e 's/^UsePAM yes/#UsePAM yes/' /etc/ssh/sshd_config
+RUN   /usr/bin/ssh-keygen -A
+
+# Install NFS client and create the mount dir
+RUN set -x \
+    && yum install -y nfs-utils \
+    &&  mkdir /nfs
+
+# setup bamboo user
+RUN set -x \
+    && groupadd -r --gid=996 scitech \
+    && useradd -m -g scitech --password '\$1\$INpOHe38\$RghIh80Eg41A4L/xsdsbxI/'  --uid=996 bamboo \
+    && chown -R bamboo:scitech /data
+
+USER bamboo
+RUN mkdir /home/bamboo/.ssh
+COPY bamboo_workflow_id_rsa.pub /home/bamboo/.ssh/
+RUN cat /home/bamboo/.ssh/bamboo_workflow_id_rsa.pub > /home/bamboo/.ssh/authorized_keys
+RUN chmod 700 /home/bamboo/.ssh/authorized_keys
+
+USER root
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
