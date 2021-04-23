@@ -35,6 +35,9 @@ then
     done
     echo "-- slurmdbd is now active ..."
 
+    echo "---> Starting SSH server ..."
+    /usr/sbin/sshd  -E /var/log/sshd.log
+
     echo "---> Starting the Slurm Controller Daemon (slurmctld) ..."
     exec gosu slurm /usr/sbin/slurmctld -Dvvv
 fi
