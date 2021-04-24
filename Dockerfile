@@ -110,7 +110,9 @@ RUN set -x \
 RUN set -x \
     && groupadd -r --gid=$BAMBOO_GROUP_ID $BAMBOO_GROUP \
     && useradd -m -g $BAMBOO_GROUP --password '\$1\$INpOHe38\$RghIh80Eg41A4L/xsdsbxI/'  --uid=$BAMBOO_USER_ID $BAMBOO_USER \
-    && chown -R $BAMBOO_USER:$BAMBOO_GROUP /data
+    && chown -R $BAMBOO_USER:$BAMBOO_GROUP /data \
+    && mkdir -p /nfs/$BAMBOO_USER \
+    && chown -R $BAMBOO_USER:$BAMBOO_GROUP /nfs/$BAMBOO_USER
 
 USER $BAMBOO_USER
 RUN mkdir /home/$BAMBOO_USER/.ssh
