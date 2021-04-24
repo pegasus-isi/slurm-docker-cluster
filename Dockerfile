@@ -9,6 +9,12 @@ LABEL org.opencontainers.image.source="https://github.com/giovtorres/slurm-docke
 ARG SLURM_TAG=slurm-19-05-1-2
 ARG GOSU_VERSION=1.11
 
+# the bamboo user
+ARG BAMBOO_USER=bamboo
+ARG BAMBOO_USER_ID=996
+ARG BAMBOO_GROUP=scitech
+ARG BAMBOO_GROUP_ID=996
+
 RUN set -ex \
     && yum makecache fast \
     && yum -y update \
@@ -102,15 +108,15 @@ RUN set -x \
 
 # setup bamboo user
 RUN set -x \
-    && groupadd -r --gid=996 scitech \
-    && useradd -m -g scitech --password '\$1\$INpOHe38\$RghIh80Eg41A4L/xsdsbxI/'  --uid=996 bamboo \
-    && chown -R bamboo:scitech /data
+    && groupadd -r --gid=$BAMBOO_GROUP_ID $BAMBOO_GROUP \
+    && useradd -m -g $BAMBOO_GROUP --password '\$1\$INpOHe38\$RghIh80Eg41A4L/xsdsbxI/'  --uid=$BAMBOO_USER_ID $BAMBOO_USER \
+    && chown -R $BAMBOO_USER:$BAMBOO_GROUP /data
 
-USER bamboo
-RUN mkdir /home/bamboo/.ssh
-COPY bamboo_workflow_id_rsa.pub /home/bamboo/.ssh/
-RUN cat /home/bamboo/.ssh/bamboo_workflow_id_rsa.pub > /home/bamboo/.ssh/authorized_keys
-RUN chmod 700 /home/bamboo/.ssh/authorized_keys
+USER $BAMBOO_USER
+RUN mkdir /home/$BAMBOO_USER/.ssh
+COPY bamboo_workflow_id_rsa.pub /home/$BAMBOO_USER/.ssh/
+RUN cat /home/$BAMBOO_USER/.ssh/bamboo_workflow_id_rsa.pub > /home/$BAMBOO_USER/.ssh/authorized_keys
+RUN chmod 700 /home/$BAMBOO_USER/.ssh/authorized_keys
 
 USER root
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

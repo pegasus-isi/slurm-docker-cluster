@@ -35,7 +35,7 @@ services:
       - etc_munge:/etc/munge
       - etc_slurm:/etc/slurm
       - var_log_slurm:/var/log/slurm
-      - nfs_data:/nfs	
+      - nfs_data:/nfs
     expose:
       - "6819"
     depends_on:
