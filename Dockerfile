@@ -106,6 +106,12 @@ RUN set -x \
     && yum install -y nfs-utils \
     &&  mkdir /nfs
 
+# Install libraries required for Condor BLAHP to work
+RUN set -x \
+    && yum install -y \
+       libtool-ltdl \
+       python3
+
 # setup bamboo user
 RUN set -x \
     && groupadd -r --gid=$BAMBOO_GROUP_ID $BAMBOO_GROUP \
