@@ -112,3 +112,24 @@ docker-compose stop
 docker-compose rm -f
 docker volume rm slurm-docker-cluster_etc_munge slurm-docker-cluster_etc_slurm slurm-docker-cluster_slurm_jobdir slurm-docker-cluster_var_lib_mysql slurm-docker-cluster_var_log_slurm
 ```
+## Additional Scitech Specific Stuff
+
+This setup in addition 
+
+* Mounts nfs filesystem in the containers at `/nfs`. 
+* The home filesystem is mounted out of a volume named `user_home`. 
+* Sets up a `bamboo` user in the dockerized setup
+* The public key for the bamboo user on scitech machines is picked up from `bamboo_workflow_id_rsa.pub`, and setup for the bamboo user in the slurm cluster setup. 
+* The SSH server set on the `slurmctld` container binds to `2222` on the host machine.
+
+### HTCondor Setup on Remote Submit Node
+
+By default, BOSCO submits job via port 22. There is no knob to change the port.
+To use a different port, on your bosco install, apply the patch file `bosco_cluster-901.patch` 
+using the patch command as root
+
+```console
+cd /usr/bin
+patch -i /path/to/bosco_cluster-901.patch 
+```
+Also you need to edit /usr/sbin/remote_gahp and update the ssh port to 2222 from 22
