@@ -15,6 +15,10 @@ ARG BAMBOO_USER_ID=996
 ARG BAMBOO_GROUP=scitech
 ARG BAMBOO_GROUP_ID=996
 
+#### ENV Variables For Packages ####
+ENV PEGASUS_VERSION "pegasus-5.0.0"
+ENV PEGASUS_VERSION_NUM "5.0.0"
+
 RUN set -ex \
     && yum makecache fast \
     && yum -y update \
@@ -92,7 +96,7 @@ RUN set -x \
 COPY slurm.conf /etc/slurm/slurm.conf
 COPY slurmdbd.conf /etc/slurm/slurmdbd.conf
 
-# Installing and configuring SSH server
+#### Installing and configuring SSH server ####
 RUN yum -y install openssh-server openssh-clients
 RUN perl -pi -e 's/^#RSAAuthentication yes/RSAAuthentication yes/' /etc/ssh/sshd_config
 RUN perl -pi -e 's/^#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config
@@ -101,18 +105,18 @@ RUN perl -pi -e 's/^#UsePAM no/UsePAM no/' /etc/ssh/sshd_config
 RUN perl -pi -e 's/^UsePAM yes/#UsePAM yes/' /etc/ssh/sshd_config
 RUN   /usr/bin/ssh-keygen -A
 
-# Install NFS client and create the mount dir
+#### Install NFS client and create the mount dir ####
 RUN set -x \
     && yum install -y nfs-utils \
     &&  mkdir /nfs
 
-# Install libraries required for Condor BLAHP to work
+#### Install libraries required for Condor BLAHP to work ####
 RUN set -x \
     && yum install -y \
        libtool-ltdl \
        python3
 
-# setup bamboo user
+#### Setup Bammboo User ####
 RUN set -x \
     && groupadd -r --gid=$BAMBOO_GROUP_ID $BAMBOO_GROUP \
     && useradd -m -g $BAMBOO_GROUP --password '\$1\$INpOHe38\$RghIh80Eg41A4L/xsdsbxI/'  --uid=$BAMBOO_USER_ID $BAMBOO_USER \
@@ -120,6 +124,18 @@ RUN set -x \
     && mkdir -p /nfs/$BAMBOO_USER \
     && chown -R $BAMBOO_USER:$BAMBOO_GROUP /nfs/$BAMBOO_USER
 
+#### Install Pegasus from tarball ####
+RUN curl -o /opt/${PEGASUS_VERSION}.tar.gz http://download.pegasus.isi.edu/pegasus/${PEGASUS_VERSION_NUM}/pegasus-binary-${PEGASUS_VERSION_NUM}-x86_64_rhel_7.tar.gz && \
+    tar -xzvf /opt/${PEGASUS_VERSION}.tar.gz -C /opt && \
+    rm /opt/${PEGASUS_VERSION}.tar.gz && \
+    chmod 755 -R /opt/${PEGASUS_VERSION} && \
+    (cd /opt && ln -s ${PEGASUS_VERSION} pegasus)
+
+ENV PATH "/opt/${PEGASUS_VERSION}/bin:$PATH"
+ENV PYTHONPATH "/opt/${PEGASUS_VERSION}/lib64/python3.6/site-packages:/opt/${PEGASUS_VERSION}/lib64/pegasus/externals/python:$PYTHONPATH"
+ENV PERL5LIB "/opt/${PEGASUS_VERSION}/lib64/pegasus/perl:$PERL5LIB"
+
+#### Configure SSH for Bamboo User ####
 USER $BAMBOO_USER
 RUN mkdir /home/$BAMBOO_USER/.ssh
 COPY bamboo_workflow_id_rsa.pub /home/$BAMBOO_USER/.ssh/
