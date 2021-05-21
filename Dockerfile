@@ -138,8 +138,8 @@ ENV PERL5LIB "/opt/${PEGASUS_VERSION}/lib64/pegasus/perl:$PERL5LIB"
 #### Configure SSH for Bamboo User ####
 USER $BAMBOO_USER
 RUN mkdir /home/$BAMBOO_USER/.ssh
-COPY bamboo_workflow_id_rsa.pub /home/$BAMBOO_USER/.ssh/
-RUN cat /home/$BAMBOO_USER/.ssh/bamboo_workflow_id_rsa.pub > /home/$BAMBOO_USER/.ssh/authorized_keys
+COPY bamboo_slurm_id_rsa.pub /home/$BAMBOO_USER/.ssh/
+RUN cat /home/$BAMBOO_USER/.ssh/bamboo_slurm_id_rsa.pub > /home/$BAMBOO_USER/.ssh/authorized_keys
 RUN chmod 700 /home/$BAMBOO_USER/.ssh/authorized_keys
 
 USER root
