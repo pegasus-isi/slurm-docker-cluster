@@ -140,6 +140,8 @@ USER $BAMBOO_USER
 RUN mkdir /home/$BAMBOO_USER/.ssh
 COPY bamboo_slurm_id_rsa.pub /home/$BAMBOO_USER/.ssh/
 RUN cat /home/$BAMBOO_USER/.ssh/bamboo_slurm_id_rsa.pub > /home/$BAMBOO_USER/.ssh/authorized_keys
+COPY workflow_id_rsa.pub /home/$BAMBOO_USER/.ssh/
+RUN cat /home/$BAMBOO_USER/.ssh/workflow_id_rsa.pub >> /home/$BAMBOO_USER/.ssh/authorized_keys
 RUN chmod 700 /home/$BAMBOO_USER/.ssh/authorized_keys
 
 USER root

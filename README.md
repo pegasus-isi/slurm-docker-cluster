@@ -121,6 +121,7 @@ This setup in addition
 * Sets up a `bamboo` user in the dockerized setup
 * The public key for the bamboo user on scitech machines is picked up from `bamboo_slurm_id_rsa.pub`, and used for setup of the bamboo user in the slurm cluster setup. 
 * The SSH server set on the `slurmctld` container binds to `2222` on the host machine.
+* The public key `workflow_id_rsa.pub` is used for transferring data into the slurm cluster
 
 
 ### HTCondor Setup on Remote Submit Node
