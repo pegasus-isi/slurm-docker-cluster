@@ -135,6 +135,14 @@ ENV PATH "/opt/${PEGASUS_VERSION}/bin:$PATH"
 ENV PYTHONPATH "/opt/${PEGASUS_VERSION}/lib64/python3.6/site-packages:/opt/${PEGASUS_VERSION}/lib64/pegasus/externals/python:$PYTHONPATH"
 ENV PERL5LIB "/opt/${PEGASUS_VERSION}/lib64/pegasus/perl:$PERL5LIB"
 
+#### Install globus-url-copy and CA certificates ####
+RUN yum -y install globus-gass-copy-progs
+RUN curl -o /tmp/certs.tgz https://download.pegasus.isi.edu/containers/certificates.tar.gz && \
+    mkdir -p /etc/grid-security && \
+    tar -zxvf /tmp/certs.tgz -C /etc/grid-security/ && \
+    rm /tmp/certs.tgz
+
+
 #### Configure SSH for Bamboo User ####
 USER $BAMBOO_USER
 RUN mkdir /home/$BAMBOO_USER/.ssh
