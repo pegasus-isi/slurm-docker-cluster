@@ -65,7 +65,7 @@ services:
     command: ["slurmd"]
     hostname: c1
     container_name: c1
-    mem_limit: 3g
+    mem_limit: 2g
     volumes:
       - etc_munge:/etc/munge
       - etc_slurm:/etc/slurm
@@ -84,7 +84,7 @@ services:
     command: ["slurmd"]
     hostname: c2
     container_name: c2
-    mem_limit: 3g
+    mem_limit: 2g
     volumes:
       - etc_munge:/etc/munge
       - etc_slurm:/etc/slurm
