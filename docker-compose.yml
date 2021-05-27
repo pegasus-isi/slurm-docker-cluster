@@ -61,9 +61,11 @@ services:
 
   c1:
     image: slurm-docker-cluster:19.05.1
+    #mem_limit: 512m
     command: ["slurmd"]
     hostname: c1
     container_name: c1
+    mem_limit: 3g
     volumes:
       - etc_munge:/etc/munge
       - etc_slurm:/etc/slurm
@@ -78,9 +80,11 @@ services:
 
   c2:
     image: slurm-docker-cluster:19.05.1
+    mem_limit: 512m
     command: ["slurmd"]
     hostname: c2
     container_name: c2
+    mem_limit: 3g
     volumes:
       - etc_munge:/etc/munge
       - etc_slurm:/etc/slurm
