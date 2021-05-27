@@ -152,7 +152,8 @@ RUN mkdir -p /opt/software/montage && \
     rm /opt/montage.tar.gz && \
     (cd /opt/software/montage/Montage && make ) && \
     (cd /opt/software/montage &&  mv Montage 6.0 && ln -s 6.0 current) && \ 
-    chmod 755 -R /opt/software/montage/current/bin/
+    chmod 755 -R /opt/software/montage/current/bin/ && \
+    yum install -y freetype
    
 #### Configure SSH for Bamboo User ####
 USER $BAMBOO_USER
