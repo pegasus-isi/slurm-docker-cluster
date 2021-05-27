@@ -96,6 +96,9 @@ RUN set -x \
 COPY slurm.conf /etc/slurm/slurm.conf
 COPY slurmdbd.conf /etc/slurm/slurmdbd.conf
 
+#### Update slurm.conf to increase memory available on nodes ####
+RUN perl -pi -e 's/^NodeName=c\[1-2\] RealMemory=1000 State=UNKNOWN/NodeName=c\[1-2\] RealMemory=2000 State=UNKNOWN/' /etc/slurm/slurm.conf
+
 #### Installing and configuring SSH server ####
 RUN yum -y install openssh-server openssh-clients
 RUN perl -pi -e 's/^#RSAAuthentication yes/RSAAuthentication yes/' /etc/ssh/sshd_config
