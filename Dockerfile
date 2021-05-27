@@ -142,7 +142,15 @@ RUN curl -o /tmp/certs.tgz https://download.pegasus.isi.edu/containers/certifica
     tar -zxvf /tmp/certs.tgz -C /etc/grid-security/ && \
     rm /tmp/certs.tgz
 
-
+#### Install Montage from tarball ####
+RUN mkdir -p /opt/software/montage && \
+    curl -o /opt/montage.tar.gz http://montage.ipac.caltech.edu/download/Montage_v6.0.tar.gz &&  \
+    tar -xzvf /opt/montage.tar.gz -C /opt/software/montage && \
+    rm /opt/montage.tar.gz && \
+    (cd /opt/software/montage/Montage && make ) && \
+    (cd /opt/software/montage &&  mv Montage 6.0 && ln -s 6.0 current) && \ 
+    chmod 755 -R /opt/software/montage/current/bin/
+   
 #### Configure SSH for Bamboo User ####
 USER $BAMBOO_USER
 RUN mkdir /home/$BAMBOO_USER/.ssh
