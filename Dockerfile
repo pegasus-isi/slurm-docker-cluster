@@ -46,6 +46,8 @@ RUN set -ex \
        vim-enhanced \
     && yum clean all \
     && rm -rf /var/cache/yum
+    
+RUN ln -s /usr/bin/python3.4 /usr/bin/python3
 
 RUN pip install Cython nose && pip3.4 install Cython nose
 
@@ -53,7 +55,7 @@ RUN set -ex \
     && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-amd64" \
     && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-amd64.asc" \
     && export GNUPGHOME="$(mktemp -d)" \
-    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
+    && gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
     && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
     && rm -rf "${GNUPGHOME}" /usr/local/bin/gosu.asc \
     && chmod +x /usr/local/bin/gosu \
