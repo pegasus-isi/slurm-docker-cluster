@@ -124,7 +124,7 @@ This setup in addition
 * The public key `workflow_id_rsa.pub` is used for transferring data into the slurm cluster
 
 
-### HTCondor Setup on Remote Submit Node
+### HTCondor Setup on Workflow Submit Node
 
 By default, BOSCO submits job via port 22. There is no knob to change the port.
 To use a different port, on your bosco install, apply the patch file `bosco_cluster-901.patch` 
@@ -135,3 +135,45 @@ cd /usr/bin
 patch -i /path/to/bosco_cluster-901.patch 
 ```
 Also you need to edit /usr/sbin/remote_gahp and update the ssh port to 2222 from 22
+
+### Add cluster in Bosco on the Workflow Submit Node
+
+Before running any jobs via BOSCO, we set up this docker slurm cluster on the workflow
+submit node from where jobs will be submitted to this SLURM cluster.
+
+You need to run these commands as the user that submits the jobs. In SciTech case, that
+is user `bamboo`
+
+```console
+[bamboo@bamboo ~]$ bosco_cluster --add slurm-pegasus.isi.edu slurm
+Cluster slurm-pegasus.isi.edu already installed
+Reinstalling on slurm-pegasus.isi.edu
+Enter the password to copy the ssh keys to slurm-pegasus.isi.edu:
+Enter passphrase for key '/scitech/shared/home/bamboo/.ssh/id_rsa': 
+Downloading release build for slurm-pegasus.isi.edu.
+Unpacking.
+You are not running as the factory user. Glideins disabled.
+Installing on cluster slurm-pegasus.isi.edu.
+Installation complete
+The cluster slurm-pegasus.isi.edu has been added for remote submission
+It is available to run jobs submitted with the following values:
+> universe = grid
+> grid_resource = batch slurm slurm-pegasus.isi.edu
+[bamboo@bamboo ~]$ 
+```
+
+To check cluster is added
+```console
+[bamboo@bamboo ~]$ bosco_cluster --list
+corbusier.isi.edu/slurm
+slurm-pegasus.isi.edu/slurm
+```
+
+You can test the setup by
+```console
+[bamboo@bamboo ~]$ bosco_cluster --test slurm-pegasus.isi.edu
+Testing ssh to slurm-pegasus.isi.edu...Passed!
+Testing remote submission...Passed!
+Submission and log files for this job are in /scitech/shared/home/bamboo/bosco-test/boscotest.zBVeb
+Waiting for jobmanager to accept job...Passed
+```
