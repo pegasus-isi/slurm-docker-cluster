@@ -98,6 +98,24 @@ services:
     depends_on:
       - "slurmctld"
 
+  c3:
+    image: slurm-docker-cluster:19.05.1
+    command: ["slurmd"]
+    hostname: c3
+    container_name: c3
+    mem_limit: 2g
+    volumes:
+      - etc_munge:/etc/munge
+      - etc_slurm:/etc/slurm
+      - slurm_jobdir:/data
+      - var_log_slurm:/var/log/slurm
+      - nfs_data:/nfs
+      - user_home:/home
+    expose:
+      - "6818"
+    depends_on:
+      - "slurmctld"
+
 volumes:
   etc_munge:
   etc_slurm:
