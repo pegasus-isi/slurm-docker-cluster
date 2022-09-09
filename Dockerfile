@@ -16,8 +16,8 @@ ARG BAMBOO_GROUP=scitech
 ARG BAMBOO_GROUP_ID=996
 
 #### ENV Variables For Packages ####
-ENV PEGASUS_VERSION "pegasus-5.0.0"
-ENV PEGASUS_VERSION_NUM "5.0.0"
+ENV PEGASUS_VERSION "pegasus-5.0.2"
+ENV PEGASUS_VERSION_NUM "5.0.2"
 
 RUN set -ex \
     && yum makecache fast \

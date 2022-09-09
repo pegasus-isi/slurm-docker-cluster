@@ -109,6 +109,6 @@ volumes:
     driver: local
     driver_opts:
       type: nfs
-      o: nfsvers=3,addr=ccg-data-1.isi.edu,rw
-      device: ":/data0/scratch-6-months-purge/slurm"
+      o: nfsvers=3,addr=mimir.isi.edu,rw
+      device: ":/mnt/SciTech/scratch-90-days/slurm"
       
