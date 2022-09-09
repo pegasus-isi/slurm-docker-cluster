@@ -177,3 +177,9 @@ Testing remote submission...Passed!
 Submission and log files for this job are in /scitech/shared/home/bamboo/bosco-test/boscotest.zBVeb
 Waiting for jobmanager to accept job...Passed
 ```
+
+The corresponding test condor job can be found in the directory ~/bosco_test
+```
+bamboo@bamboo boscotest.zBVeb]$ pwd
+/scitech/shared/home/bamboo/bosco-test/
+```
