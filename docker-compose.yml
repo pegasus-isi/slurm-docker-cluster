@@ -128,5 +128,4 @@ volumes:
     driver_opts:
       type: nfs
       o: nfsvers=3,addr=mimir.isi.edu,rw
-      device: ":/mnt/SciTech/scratch-90-days/slurm"
-      
+      device: ":/mnt/scitech/scratch2-90-days/slurm"
