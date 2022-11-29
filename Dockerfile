@@ -16,9 +16,9 @@ ARG BAMBOO_GROUP=scitech
 ARG BAMBOO_GROUP_ID=996
 
 # number of slurm workers to update slurm config
-ENV SLURM_NUM_NODES=3
+ARG SLURM_NUM_NODES=3
 # memory assigned in MB
-ENV SLURM_NODE_MEMORY=2000
+ARG SLURM_NODE_MEMORY=2000
 
 #### ENV Variables For Packages ####
 ENV PEGASUS_VERSION "pegasus-5.0.3"
@@ -104,8 +104,8 @@ COPY slurm.conf /etc/slurm/slurm.conf
 COPY slurmdbd.conf /etc/slurm/slurmdbd.conf
 
 #### Update slurm.conf to increase memory available on nodes ####
-RUN perl -pi.bak -e 's/^NodeName=c\[1-2\] RealMemory=1000 State=UNKNOWN/NodeName=c\[1-$ENV{SLURM_NUM_NODES}\] RealMemory=$ENV{SLURM_NODE_MEMORY} State=UNKNOWN/' /etc/slurm/slurm.conf \
-    && perl -pi -e 's/^PartitionName=normal Default=yes Nodes=c\[1-2\]/PartitionName=normal Default=yes Nodes=c\[1-$ENV{SLURM_NUM_NODES}\]/' /etc/slurm/slurm.conf
+RUN perl -pi.bak -e "s/^NodeName=c\[1-2\] RealMemory=1000 State=UNKNOWN/NodeName=c\[1-$SLURM_NUM_NODES\] RealMemory=$SLURM_NODE_MEMORY State=UNKNOWN/" /etc/slurm/slurm.conf \
+    && perl -pi -e "s/^PartitionName=normal Default=yes Nodes=c\[1-2\]/PartitionName=normal Default=yes Nodes=c\[1-$SLURM_NUM_NODES\]/" /etc/slurm/slurm.conf
  
 
 #### Installing and configuring SSH server ####
