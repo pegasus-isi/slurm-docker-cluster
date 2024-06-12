@@ -54,7 +54,7 @@ RUN set -ex \
     
 RUN ln -s /usr/bin/python3.4 /usr/bin/python3
 
-RUN pip install Cython nose && pip3.4 install Cython nose
+RUN pip install --trusted-host pypi.python.org Cython nose && pip3.4 install --trusted-host pypi.python.org Cython nose
 
 RUN set -ex \
     && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-amd64" \
