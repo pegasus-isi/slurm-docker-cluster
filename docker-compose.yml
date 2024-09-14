@@ -29,7 +29,7 @@ services:
 #      - 2049
 
   slurmdbd:
-    image: slurm-docker-cluster:19.05.1
+    image: slurm-docker-cluster:21.08.6
     build:
       context: .
       dockerfile: Dockerfile
@@ -49,7 +49,7 @@ services:
       - "mysql"
 
   slurmctld:
-    image: slurm-docker-cluster:19.05.1
+    image: slurm-docker-cluster:21.08.6
     command: ["slurmctld"]
     container_name: slurmctld
     hostname: slurmctld
@@ -67,7 +67,7 @@ services:
       - "slurmdbd"
 
   c1:
-    image: slurm-docker-cluster:19.05.1
+    image: slurm-docker-cluster:21.08.6
     command: ["slurmd"]
     hostname: c1
     container_name: c1
@@ -85,7 +85,7 @@ services:
       - "slurmctld"
 
   c2:
-    image: slurm-docker-cluster:19.05.1
+    image: slurm-docker-cluster:21.08.6
     command: ["slurmd"]
     hostname: c2
     container_name: c2
@@ -103,7 +103,7 @@ services:
       - "slurmctld"
 
   c3:
-    image: slurm-docker-cluster:19.05.1
+    image: slurm-docker-cluster:21.08.6
     command: ["slurmd"]
     hostname: c3
     container_name: c3
