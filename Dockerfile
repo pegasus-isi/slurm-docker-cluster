@@ -6,6 +6,7 @@ LABEL org.opencontainers.image.source="https://github.com/giovtorres/slurm-docke
       org.label-schema.docker.cmd="docker-compose up -d" \
       maintainer="Giovanni Torres"
 
+
 ARG SLURM_TAG=slurm-21-08-6-1
 ARG GOSU_VERSION=1.11
 
@@ -112,6 +113,8 @@ COPY slurmdbd.conf /etc/slurm/slurmdbd.conf
 RUN set -x \
     && chown slurm:slurm /etc/slurm/slurmdbd.conf \
     && chmod 600 /etc/slurm/slurmdbd.conf
+
+
 
 #### Update slurm.conf to increase memory available on nodes ####
 RUN perl -pi.bak -e "s/^NodeName=c\[1-2\] RealMemory=1000 State=UNKNOWN/NodeName=c\[1-$SLURM_NUM_NODES\] RealMemory=$SLURM_NODE_MEMORY State=UNKNOWN/" /etc/slurm/slurm.conf \

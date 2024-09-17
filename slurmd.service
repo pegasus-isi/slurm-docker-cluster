@@ -4,6 +4,7 @@ After=docker.service
 Requires=docker.service
 
 [Service]
+Environment="IMAGE_TAG=21.08.6"
 Type=oneshot
 RemainAfterExit=yes
 WorkingDirectory=/home/vahi/slurm-docker-cluster

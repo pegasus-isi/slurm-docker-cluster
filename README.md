@@ -27,7 +27,7 @@ The compose file will create the following named volumes:
 Build the image locally:
 
 ```console
-docker build -t slurm-docker-cluster:19.05.1 .
+docker build -t slurm-docker-cluster:21.08.6 .
 ```
 
 Build a different version of Slurm using Docker build args and the Slurm Git
@@ -37,9 +37,11 @@ tag:
 docker build --build-arg SLURM_TAG="slurm-19-05-2-1" -t slurm-docker-cluster:19.05.2 .
 ```
 
-> Note: You will need to update the container image version in
-> [docker-compose.yml](docker-compose.yml).
+Or equivalently using `docker-compose`:
 
+```console
+SLURM_TAG=slurm-19-05-2-1 IMAGE_TAG=19.05.2 docker-compose build
+```
 
 
 ## Starting the Cluster
@@ -47,7 +49,7 @@ docker build --build-arg SLURM_TAG="slurm-19-05-2-1" -t slurm-docker-cluster:19.
 Run `docker-compose` to instantiate the cluster:
 
 ```console
-docker-compose up -d
+IMAGE_TAG=19.05.2 docker-compose up -d
 ```
 
 ## Register the Cluster with SlurmDBD
@@ -90,10 +92,12 @@ the `/data` directory when on the **slurmctld** container and then submit a job:
 
 ```console
 [root@slurmctld /]# cd /data/
-[root@slurmctld data]# sbatch --wrap="uptime"
+[root@slurmctld data]# sbatch --wrap="hostname"
 Submitted batch job 2
 [root@slurmctld data]# ls
 slurm-2.out
+[root@slurmctld data]# cat slurm-2.out
+c1
 ```
 
 ## Stopping and Restarting the Cluster
@@ -112,6 +116,19 @@ docker-compose stop
 docker-compose rm -f
 docker volume rm slurm-docker-cluster_etc_munge slurm-docker-cluster_etc_slurm slurm-docker-cluster_slurm_jobdir slurm-docker-cluster_var_lib_mysql slurm-docker-cluster_var_log_slurm
 ```
+## Updating the Cluster
+
+If you want to change the `slurm.conf` or `slurmdbd.conf` file without a rebuilding you can do so by calling
+```console
+./update_slurmfiles.sh slurm.conf slurmdbd.conf
+```
+(or just one of the files).
+The Cluster will automatically be restarted afterwards with
+```console
+docker-compose restart
+```
+This might come in handy if you add or remove a node to your cluster or want to test a new setting.
+
 ## Additional Scitech Specific Modifications
 
 This setup in addition 
@@ -183,3 +200,4 @@ The corresponding test condor job can be found in the directory ~/bosco_test
 bamboo@bamboo boscotest.zBVeb]$ pwd
 /scitech/shared/home/bamboo/bosco-test/
 ```
+
