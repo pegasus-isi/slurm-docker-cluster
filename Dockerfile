@@ -58,6 +58,7 @@ RUN set -ex \
        vim-enhanced \
        http-parser-devel \
        json-c-devel \
+       rsync \
     && dnf clean all \
     && rm -rf /var/cache/dnf
 
