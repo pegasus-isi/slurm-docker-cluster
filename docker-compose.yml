@@ -2,7 +2,7 @@ version: "2.2"
 
 services:
   mysql:
-    image: mysql:5.7
+    image: mariadb:10.10
     hostname: mysql
     container_name: mysql
     mem_limit: 1g
@@ -29,10 +29,11 @@ services:
 #      - 2049
 
   slurmdbd:
-    image: slurm-docker-cluster:21.08.6
+    image: slurm-docker-cluster:${IMAGE_TAG:-21.08}
     build:
       context: .
-      dockerfile: Dockerfile
+      args:
+        SLURM_TAG: ${SLURM_TAG:-slurm-21-08-6-1}
     command: ["slurmdbd"]
     container_name: slurmdbd
     hostname: slurmdbd
@@ -49,7 +50,7 @@ services:
       - "mysql"
 
   slurmctld:
-    image: slurm-docker-cluster:21.08.6
+    image: slurm-docker-cluster:${IMAGE_TAG:-21.08}
     command: ["slurmctld"]
     container_name: slurmctld
     hostname: slurmctld
@@ -67,7 +68,7 @@ services:
       - "slurmdbd"
 
   c1:
-    image: slurm-docker-cluster:21.08.6
+    image: slurm-docker-cluster:${IMAGE_TAG:-21.08}
     command: ["slurmd"]
     hostname: c1
     container_name: c1
@@ -85,7 +86,7 @@ services:
       - "slurmctld"
 
   c2:
-    image: slurm-docker-cluster:21.08.6
+    image: slurm-docker-cluster:${IMAGE_TAG:-21.08}
     command: ["slurmd"]
     hostname: c2
     container_name: c2
@@ -103,7 +104,7 @@ services:
       - "slurmctld"
 
   c3:
-    image: slurm-docker-cluster:21.08.6
+    image: slurm-docker-cluster:${IMAGE_TAG:-21.08}
     command: ["slurmd"]
     hostname: c3
     container_name: c3
