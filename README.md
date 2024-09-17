@@ -162,37 +162,50 @@ You need to run these commands as the user that submits the jobs. In SciTech cas
 is user `bamboo`
 
 ```console
-[bamboo@bamboo ~]$ bosco_cluster --add slurm-pegasus.isi.edu slurm
-Cluster slurm-pegasus.isi.edu already installed
-Reinstalling on slurm-pegasus.isi.edu
-Enter the password to copy the ssh keys to slurm-pegasus.isi.edu:
+[bamboo@bamboo ~]$condor_remote_cluster --add slurm-pegasus.isi.edu:2222 slurm
+Enter the password to copy the ssh keys to slurm-pegasus.isi.edu:2222:
+The authenticity of host '[slurm-pegasus.isi.edu]:2222 ([128.9.46.64]:2222)' can't be established.
+ECDSA key fingerprint is SHA256:xp6i2HogEiwIZDO0QL0X7bUM2jAkReHyGo9bfljBqGk.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '[slurm-pegasus.isi.edu]:2222,[128.9.46.64]:2222' (ECDSA) to the list of known hosts.
 Enter passphrase for key '/scitech/shared/home/bamboo/.ssh/id_rsa': 
-Downloading release build for slurm-pegasus.isi.edu.
-Unpacking.
-You are not running as the factory user. Glideins disabled.
-Installing on cluster slurm-pegasus.isi.edu.
+Downloading release build for slurm-pegasus.isi.edu:2222..
+Unpacking..
+Installing on cluster slurm-pegasus.isi.edu:2222.
 Installation complete
-The cluster slurm-pegasus.isi.edu has been added for remote submission
+The cluster slurm-pegasus.isi.edu:2222 has been added for remote submission
 It is available to run jobs submitted with the following values:
 > universe = grid
-> grid_resource = batch slurm slurm-pegasus.isi.edu
+> grid_resource = batch slurm slurm-pegasus.isi.edu:2222
 [bamboo@bamboo ~]$ 
 ```
 
 To check cluster is added
 ```console
-[bamboo@bamboo ~]$ bosco_cluster --list
-corbusier.isi.edu/slurm
-slurm-pegasus.isi.edu/slurm
+[bamboo@bamboo ~]$ condor_remote_cluster --list
+slurm-pegasus.isi.edu:2222/slurm
 ```
 
 You can test the setup by
 ```console
-[bamboo@bamboo ~]$ bosco_cluster --test slurm-pegasus.isi.edu
-Testing ssh to slurm-pegasus.isi.edu...Passed!
+[bamboo@bamboo ~]$ condor_remote_cluster --test slurm-pegasus.isi.edu:2222
+Testing ssh to slurm-pegasus.isi.edu:2222...Passed!
 Testing remote submission...Passed!
-Submission and log files for this job are in /scitech/shared/home/bamboo/bosco-test/boscotest.zBVeb
+Submission and log files for this job are in /scitech/shared/home/bamboo/bosco-test/boscotest.14Y7a
 Waiting for jobmanager to accept job...Passed
+Checking for submission to remote slurm cluster (could take ~30 seconds)...Passed!
+Waiting for job to exit... this could take a while (waiting 60 seconds)...Failed
+The job did not end in 60 seconds.  This is not always a bad thing...
+Maybe condor is waiting longer to poll for job completion?
+Here is the current status of the job:"
+
+
+-- Schedd: bamboo.isi.edu : <128.9.46.30:9618?... @ 09/17/24 15:54:12
+OWNER  BATCH_NAME     SUBMITTED   DONE   RUN    IDLE  TOTAL JOB_IDS
+bamboo ID: 3904783   9/17 15:52      _      _      1      1 3904783.0
+
+Total for query: 1 jobs; 0 completed, 0 removed, 1 idle, 0 running, 0 held, 0 suspended 
+Total for all users: 1 jobs; 0 completed, 0 removed, 1 idle, 0 running, 0 held, 0 suspended
 ```
 
 The corresponding test condor job can be found in the directory ~/bosco_test
