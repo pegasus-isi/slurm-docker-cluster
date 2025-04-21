@@ -214,3 +214,32 @@ bamboo@bamboo boscotest.zBVeb]$ pwd
 /scitech/shared/home/bamboo/bosco-test/
 ```
 
+## Known Issues ##
+
+This setup for Pegasus workflow tests require the SSH server running on
+the container `slurmctld` and binding to the host port 2222 to be
+accessible oustide the docker setup and also from within.
+
+For example, if the HOST OS hostname is workflow.example.com , 
+then you should be able to do
+
+```
+ssh -p 2222 workflow.example.com 
+```
+
+However, because of recent changes to Docker , most likely
+https://github.com/moby/moby/pull/49325 
+
+the ssh from within the docker setup (container c2 for example)
+does not work. The above ssh command returns
+
+**No route to host**
+
+Even though, you can ssh from the host OS correctly.
+
+To fix this, do the following on the HOST OS
+
+```
+$ sudo systemctl stop iptables
+$ sudo systemctl restart docker
+```
