@@ -22,8 +22,8 @@ ARG SLURM_NUM_NODES=3
 ARG SLURM_NODE_MEMORY=2000
 
 #### ENV Variables For Packages ####
-ENV PEGASUS_VERSION "pegasus-5.0.8"
-ENV PEGASUS_VERSION_NUM "5.0.8"
+ENV PEGASUS_VERSION "pegasus-5.1.3-dev.0"
+ENV PEGASUS_VERSION_NUM "5.1.3-dev.0"
 
 RUN <<EOT
 # Create user ASAP so teh uid/gid do not get used by other installed packages.
@@ -150,6 +150,8 @@ tar -xzvf /opt/${PEGASUS_VERSION}.tar.gz -C /opt
 rm -f /opt/${PEGASUS_VERSION}.tar.gz
 chmod 755 -R /opt/${PEGASUS_VERSION}
 (cd /opt && ln -s ${PEGASUS_VERSION} pegasus)
+
+
 
 #### Install globus-url-copy and CA certificates ####
 dnf -y install 'dnf-command(config-manager)'
